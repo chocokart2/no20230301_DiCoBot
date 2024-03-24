@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Test_2.Data;
+
+internal class MyGuildInfo
+{
+    /// <summary>
+    ///     나의 서버입니다.
+    /// </summary>
+    public GuildInfomationHelper VectorServer;
+}
