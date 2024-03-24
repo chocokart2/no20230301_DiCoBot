@@ -1,4 +1,6 @@
 [Go To Main / 찾는게 여기가 아닌가요? 뒤로 가기](https://github.com/chocokart2)
+# 경고 : MasterInfo.cs 때문에 프로그램이 실행되지 않을 수 있음
+
 # no20230301_DiCoBot
  Discord dot NET 라이브러리를 이용하여 만들어 본 Discord Bot입니다.
  저도 만들어 봤는데 재밌어요. async 문법에 안 익숙해서 조금 괴로울 뿐.
