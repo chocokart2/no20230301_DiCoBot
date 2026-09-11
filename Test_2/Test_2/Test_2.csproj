@@ -10,10 +10,19 @@
   <ItemGroup>
     <PackageReference Include="Discord.Net" Version="3.9.0" />
     <PackageReference Include="Discord.Net.Core" Version="3.9.0" />
+    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.69.0.3667" />
+    <PackageReference Include="Notion.Net" Version="4.4.0" />
+    <PackageReference Include="OpenAI" Version="2.7.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Apps\NewFolder\" />
     <Folder Include="Apps\Vote\" />
+    <Folder Include="Apps\Works\Automation\Invoker\" />
+    <Folder Include="Apps\Works\Automation\SingleTask\HouseSearch\" />
+    <Folder Include="Apps\Works\Automation\SingleTask\OpenAiChat\" />
+    <Folder Include="Apps\Works\Automation\SingleTask\WeatherNeedUmbrella\" />
+    <Folder Include="Code\Event\" />
   </ItemGroup>
 
 </Project>

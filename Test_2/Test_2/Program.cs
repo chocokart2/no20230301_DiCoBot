@@ -2,16 +2,24 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using System;
+using System.ComponentModel.Design;
 using System.Threading.Tasks;
+using Test_2.Base;
+using Test_2.Code.Object;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Test_2;
 
 // 어떤 키 -> 어떤 객체 : 뭐더라, 메시지를 주고받을때, 맥락같은걸 요구하기도 합니다.
 public class Program
 {
+    static internal Apps.Works.Automation.WorkAutomationRoutineManager RoutineManager;
+
     private DiscordSocketClient _client;
     // userID => UserContext
     private Base.UserContext _userContext;
+    private Apps.Works.Automation.WorkAutomationRoutineManager _routineManager;
+    //private Singleton _singleton;
     /// <summary>
     ///     무한 루프를 종료시킵니다.
     /// </summary>
@@ -24,6 +32,8 @@ public class Program
     
     public async Task MainAsync()
     {
+        Init();
+
         // 이 녀석이 메시지를 읽을 특권을 부여합니다.
         //DiscordSocketConfig config = new()
         //{
@@ -44,7 +54,7 @@ public class Program
         _client.MessageReceived += ReadMessage;
         _client.ReactionAdded += AddReaction;
 
-        await _client.LoginAsync(TokenType.Bot, TokenReceiver.GetToken());
+        await _client.LoginAsync(TokenType.Bot, TokenReceiver.GetApiKey(EKeyType.DiscordBot));
         await _client.StartAsync();
 
         while(NeedShutdown == false)
@@ -55,6 +65,15 @@ public class Program
         }
         Hack.Say(this, "루프를 빠져나갑니다");
         await Task.Delay(Timeout.Infinite);
+    }
+
+    private void Init()
+    {
+        Singleton.instance = new Singleton();
+        Singleton.instance.Init();
+
+        _routineManager = new Apps.Works.Automation.WorkAutomationRoutineManager();
+        RoutineManager = _routineManager;
     }
 
     private Task Log(LogMessage msg)
@@ -70,7 +89,7 @@ public class Program
         return Task.CompletedTask;
     }
 
-    private Task ReadMessage(SocketMessage args)
+    private async Task ReadMessage(SocketMessage args)
     {
         // 이 함수 내부에서 전부를 처리해야 합니다!
         SaySocketMessageInfo(args);
@@ -80,32 +99,55 @@ public class Program
         if (message == null)
         {
             Hack.Say(this, "args를 SocketUserMessage로 바꿀 수 없음.");
-            return Task.CompletedTask;
+            return; // Task.CompletedTask;
         }
         if (message.Author.Id.Equals(_client.CurrentUser.Id))
         {
             Hack.Say(this, "내가 보낸 메시지는 무시합니다");
-            return Task.CompletedTask;
+            return; // Task.CompletedTask;
         }
         int pos = 0;
-        if(!message.HasCharPrefix('.', ref pos))
+        if(!(message.HasCharPrefix('.', ref pos) ||
+            message.HasStringPrefix("여기", ref pos) ||
+            message.HasStringPrefix("여기야", ref pos)))
         {
             Hack.Say(this, "접두어가 옳지 않음.");
-            return Task.CompletedTask;
+            return;
         }
 
         // 여기에 메시지 넣기
         
         Base.MessageToMethod receiver = new(message);
-        
-        string content = message.Content.Remove(0, 1);
+
+        // 접두어 필터링
+        string content = null;
+        if (message.HasCharPrefix('.', ref pos))
+        {
+            content = message.Content.Remove(0, 1);
+        }
+        else if (message.HasStringPrefix("여기야 ", ref pos))
+        {
+            content = message.Content.Remove(0, 4);
+        }
+        else if (message.HasStringPrefix("여기 ", ref pos))
+        {
+            content = message.Content.Remove(0, 3);
+        }
         _userContext[message.Author.Id].recentMessage = message;
 
+        MessageToMethodResult m_messageResult;
+
         if (message.Author.Id == Data.MasterInfo.MasterID)
-            receiver.RecvAdmin(content);
+            m_messageResult = await receiver.RecvAdmin(content);
         else
-           receiver.Recv(content);
-        return Task.CompletedTask;
+            m_messageResult = await receiver.Recv(content);
+
+        if (m_messageResult.isPrintMessage)
+        {
+            message.Channel.SendMessageAsync($"{m_messageResult.message}");
+        }
+
+        return; // Task.CompletedTask;
     }
 
 

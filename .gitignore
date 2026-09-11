@@ -6,6 +6,9 @@
 # /[Dd]i[Cc]o[Bb]ot/key.txt
 /[Dd]i[Cc]o[Bb]ot
 DiCoBot/key.txt
+DiCoBot/openai_api_key.txt
+DiCoBot/credentials.json
+**/credentials.json
 
 /[Ll]ibrary/
 /[Tt]emp/

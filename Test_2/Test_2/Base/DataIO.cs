@@ -12,11 +12,13 @@ namespace Test_2.Base;
 /// </summary>
 internal class DataIO
 {
-    public static (bool, string) Save()
+    public static MessageToMethodResult Save()
     {
-
-
-        return (true, "구현이 아직 되지 않았습니다.");
+        return new MessageToMethodResult()
+        {
+            isSuccess = true,
+            message = "구현이 아직 되지 않았습니다."
+        };
     }
 
 

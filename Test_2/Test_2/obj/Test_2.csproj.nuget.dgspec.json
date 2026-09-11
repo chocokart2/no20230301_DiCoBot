@@ -51,6 +51,18 @@
             "Discord.Net.Core": {
               "target": "Package",
               "version": "[3.9.0, )"
+            },
+            "Google.Apis.Calendar.v3": {
+              "target": "Package",
+              "version": "[1.69.0.3667, )"
+            },
+            "Notion.Net": {
+              "target": "Package",
+              "version": "[4.4.0, )"
+            },
+            "OpenAI": {
+              "target": "Package",
+              "version": "[2.7.0, )"
             }
           },
           "imports": [
